@@ -84,7 +84,8 @@ class DBProvider {
           )
           """);
       await db.execute("""
-      CREATE TABLE Billing(
+      CREATE TABLE BillingDeliverys(
+          idBillingDelivery INTEGER PRIMARY KEY,
           billingAddress TEXT,
           deliveryAddress TEXT,
           idUser INTEGER,
@@ -175,7 +176,7 @@ class DBProvider {
   newBillingDelivery(BillingDelivery newBillingDelivery) async {
     final db = await database;
     //get the biggest idBillingDelivery in the table
-    int idBillingDelivery = DateTime.now().millisecondsSinceEpoch;
+    int idBillingDelivery = newBillingDelivery.idBillingDelivery;
     //insert to the table using the new idBillingDelivery
     var raw = await db.rawInsert(
         "INSERT Into BillingDeliverys (idBillingDelivery,billingAddress,deliveryAddress,idUser)"
@@ -240,7 +241,7 @@ class DBProvider {
 
   deleteCartById(int idUser, int idCart) async {
     final db = await database;
-    return db.delete("Carts",
+    db.delete("Carts",
         where: "idUser = ? AND idCart = ?", whereArgs: [idUser, idCart]);
   }
 

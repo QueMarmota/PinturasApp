@@ -61,33 +61,47 @@ class _ProductState extends State<Product> {
     return false;
   }
 
-  Widget sizeScreen480x640(BuildContext context) {}
-
-  Widget sizeScreen720x1280(BuildContext context) {}
-
-  Widget sizeScreen1200x1920(BuildContext context) {
+  Widget sizeScreen480x640(BuildContext context) {
     return Column(
       children: <Widget>[
         Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2.7,
+          padding: EdgeInsets.all(5),
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 3.7,
           child: Image.asset(
             _image,
             fit: BoxFit.fill,
           ),
         ),
         Container(
-          child: Text('Nombre del producto'),
+          child: Text(
+            'RealTek',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ),
         Container(
-          child: Text('Precio'),
-        ),
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.attach_money),
+            Text(
+              '50.00',
+              style: TextStyle(fontSize: 16),
+            )
+          ],
+        )),
         Container(
-          child: Text('Descripcion'),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+          child: Text(
+              'Vinipesa es una pintura vinil acrílica diseñada para obtener acabados tersos y de apariencia mate en colores actuales y modernos que satisfagan los gustos más exigentes. además de excelente calidad.'),
         ),
         Container(
           width: MediaQuery.of(context).size.width / 1.5,
           child: RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0),
+              side: BorderSide(color: Colors.black),
+            ),
             color: Colors.blue,
             onPressed: _isButtonTapped ? null : _onTappedAddProductCart,
             child: Row(
@@ -116,13 +130,197 @@ class _ProductState extends State<Product> {
             scrollDirection: Axis.horizontal,
             children: <Widget>[
               createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Nombre", "50.00", "Description", "Category"),
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
               createCardProductPaint(context, 'assets/images/Vinyl/vini.png',
-                  "Nombre", "50.00", "Description", "Category"),
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
               createCardProductPaint(
                   context,
                   'assets/images/Vinyl/vinipesa.png',
-                  "Nombre",
+                  "Vintek",
+                  "50.00",
+                  "Description",
+                  "Category"),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget sizeScreen720x1280(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(5),
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 3.7,
+          child: Image.asset(
+            _image,
+            fit: BoxFit.fill,
+          ),
+        ),
+        Container(
+          child: Text(
+            'RealTek',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Container(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.attach_money),
+            Text(
+              '50.00',
+              style: TextStyle(fontSize: 16),
+            )
+          ],
+        )),
+        Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+          child: Text(
+              'Vinipesa es una pintura vinil acrílica diseñada para obtener acabados tersos y de apariencia mate en colores actuales y modernos que satisfagan los gustos más exigentes. además de excelente calidad.'),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 1.5,
+          child: RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0),
+              side: BorderSide(color: Colors.black),
+            ),
+            color: Colors.blue,
+            onPressed: _isButtonTapped ? null : _onTappedAddProductCart,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.add_shopping_cart,
+                  color: Colors.white,
+                ),
+                Text(
+                  'Agregar al carrito',
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+          ),
+        ),
+        Text(
+          'Productos relacionados',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height / 3,
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/vini.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(
+                  context,
+                  'assets/images/Vinyl/vinipesa.png',
+                  "Vintek",
+                  "50.00",
+                  "Description",
+                  "Category"),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget sizeScreen1200x1920(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(5),
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 3.7,
+          child: Image.asset(
+            _image,
+            fit: BoxFit.fill,
+          ),
+        ),
+        Container(
+          child: Text(
+            'RealTek',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Container(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.attach_money),
+            Text(
+              '50.00',
+              style: TextStyle(fontSize: 16),
+            )
+          ],
+        )),
+        Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+          child: Text(
+              'Vinipesa es una pintura vinil acrílica diseñada para obtener acabados tersos y de apariencia mate en colores actuales y modernos que satisfagan los gustos más exigentes. además de excelente calidad.'),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 1.5,
+          child: RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0),
+              side: BorderSide(color: Colors.black),
+            ),
+            color: Colors.blue,
+            onPressed: _isButtonTapped ? null : _onTappedAddProductCart,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.add_shopping_cart,
+                  color: Colors.white,
+                ),
+                Text(
+                  'Agregar al carrito',
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+          ),
+        ),
+        Text(
+          'Productos relacionados',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height / 3,
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/vini.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
+                  "Vintek", "50.00", "Description", "Category"),
+              createCardProductPaint(
+                  context,
+                  'assets/images/Vinyl/vinipesa.png',
+                  "Vintek",
                   "50.00",
                   "Description",
                   "Category"),
@@ -173,7 +371,7 @@ class _ProductState extends State<Product> {
     return Container(
       // color: Colors.transparent,
       height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width / 2,
+      width: MediaQuery.of(context).size.width / 3,
       child: Container(
         // color: Colors.transparent,
         child: Column(
@@ -246,7 +444,11 @@ class _ProductState extends State<Product> {
                 children: <Widget>[
                   Expanded(
                     child: RaisedButton(
-                      color: Colors.white60,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0),
+                        side: BorderSide(color: Colors.black),
+                      ),
+                      color: Colors.white,
                       onPressed:
                           _isButtonTapped ? null : _onTappedAddProductCart,
                       child: Icon(
@@ -298,6 +500,7 @@ class _ProductState extends State<Product> {
       child: Scaffold(
           key: _scaffoldKey,
           appBar: new AppBar(
+            backgroundColor: Colors.red,
             title: Text(_name),
             centerTitle: true,
             actions: <Widget>[
@@ -327,7 +530,7 @@ class _ProductState extends State<Product> {
                                   child: new Stack(
                                   children: <Widget>[
                                     new Icon(Icons.brightness_1,
-                                        size: 20.0, color: Colors.red[800]),
+                                        size: 20.0, color: Colors.green[800]),
                                     new Positioned(
                                         top: 3.0,
                                         right: 6.0,

@@ -64,6 +64,14 @@ flutter:
    - assets/images/Waterproofing/IMPER-LUX-3D.png
    - assets/images/Waterproofing/IMPER-MICRO-3D.png
    - assets/images/Waterproofing/IMPER-RUF-3D.png
+   - assets/images/Adhesivos/acribond.png
+   - assets/images/Adhesivos/pegaso-bond.png
+   - assets/images/Adhesivos/pegaso-tirol.png
+   - assets/images/Adhesivos/pegaso-yeso.png
+   - assets/images/ae.png
+   - assets/images/ae.jpg
+   - assets/images/mastercard-logo.png
+   - assets/images/visa.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

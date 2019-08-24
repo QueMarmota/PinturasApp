@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pinturasapp/database.dart';
+import 'package:pinturasapp/widgets/dialogs.dart';
 
 bool privateEvent = false;
 
@@ -33,6 +35,20 @@ class _PaymentState extends State<Payment> {
   FocusNode f2 = FocusNode();
   FocusNode f3 = FocusNode();
   FocusNode f4 = FocusNode();
+
+  var deliveryAddress = TextEditingController();
+
+  var outdoorDeliver = TextEditingController();
+
+  var indoorDeliver = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     //disable screen rotation
@@ -44,8 +60,8 @@ class _PaymentState extends State<Payment> {
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Pago'),
-        backgroundColor: Colors.black,
+        title: Text('Datos de entrega'),
+        backgroundColor: Colors.red,
       ),
       body: Stack(
         children: <Widget>[
@@ -93,14 +109,14 @@ class _PaymentState extends State<Payment> {
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          colorFilter: new ColorFilter.mode(
-              Colors.grey.withOpacity(0.5), BlendMode.dstOut),
-          image: ExactAssetImage('assets/images/bg3.png'),
-          fit: BoxFit.fill,
-          alignment: Alignment.topCenter,
-        ),
-      ),
+          // image: DecorationImage(
+          //   colorFilter: new ColorFilter.mode(
+          //       Colors.grey.withOpacity(0.5), BlendMode.dstOut),
+          //   image: ExactAssetImage('assets/images/bg3.png'),
+          //   fit: BoxFit.fill,
+          //   alignment: Alignment.topCenter,
+          // ),
+          ),
     );
   }
 
@@ -112,17 +128,17 @@ class _PaymentState extends State<Payment> {
           minWidth: MediaQuery.of(context).size.width / 2,
           child: RaisedButton(
             //ON PRESSED FUNCTION , THIS IS IMPLEMENTATION IS TO AVOID MULTI TAPPING ON THE BUTTON
-            onPressed: _isButtonTapped ? null : _onTappedLoggin,
-            color: Colors.green,
+            onPressed: _isButtonTapped ? null : _onTappedFunction,
+            color: Colors.blue,
             shape: new RoundedRectangleBorder(
                 side: BorderSide(color: Colors.black),
                 borderRadius: new BorderRadius.circular(10.0)),
             child: new Text(
-              'Pagar',
+              'Agregar tarjéta',
               style: new TextStyle(
                 fontFamily: "Roboto",
                 fontSize: _fontSize,
-                color: Colors.blue,
+                color: Colors.white,
               ),
             ),
           ),
@@ -131,30 +147,31 @@ class _PaymentState extends State<Payment> {
 
   bool _isButtonTapped = false;
   //function called when pay buttons its hit
-  _onTappedLoggin() {
-    if (_formKey.currentState.validate()) {
-      setState(() => _isButtonTapped =
-          !_isButtonTapped); //tapping the button once, disables the button from being tapped again
-      //DO DE pay FUNCTION
-      payButtonPressed();
-    }
+  _onTappedFunction() {
+    // if (_formKey.currentState.validate()) {
+    setState(() => _isButtonTapped =
+        !_isButtonTapped); //tapping the button once, disables the button from being tapped again
+    //DO DE pay FUNCTION
+    payButtonPressed();
+    // }
   }
 
   //action pay button function
   void payButtonPressed() async {
-    if (_formKey.currentState.validate()) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text(
-          'Verificando',
-          style: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
-        ),
-        duration: Duration(seconds: 1),
-      ));
-      //Codigo provisional
-
-    } else {
-      //FORMULARIO NO VALIDO
-    }
+    // if (_formKey.currentState.validate()) {
+    // _scaffoldKey.currentState.showSnackBar(SnackBar(
+    //   content: Text(
+    //     'Verificando',
+    //     style: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
+    //   ),
+    //   duration: Duration(seconds: 1),
+    // ));
+    //Codigo provisional
+    Dialogs dialog = new Dialogs();
+    dialog.creditCard(context);
+    // } else {
+    //   //FORMULARIO NO VALIDO
+    // }
     setState(() => _isButtonTapped =
         !_isButtonTapped); //tapping the button once, disables the button from being tapped again
   }
@@ -289,9 +306,9 @@ class _PaymentState extends State<Payment> {
                   errorStyle:
                       TextStyle(fontSize: _fontSize, fontFamily: 'Roboto'),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 0.0),
+                    borderSide: BorderSide(color: Colors.blue, width: 1.0),
                   ),
-                  fillColor: Colors.blue,
+                  fillColor: Colors.white,
                   filled: true,
                   contentPadding: paddingTextField,
                   border: OutlineInputBorder(
@@ -314,203 +331,176 @@ class _PaymentState extends State<Payment> {
           value: privateEvent,
           onChanged: (bool value) {
             setState(() {
+              if (value) {
+                DBProvider db = new DBProvider();
+                db.getAllBillingDeliverysForUser(0).then((onValue) {
+                  deliveryAddress.text =
+                      onValue.elementAt(0).deliveryAddress.split("_")[0];
+                  indoorDeliver.text =
+                      onValue.elementAt(0).deliveryAddress.split("_")[1];
+                  outdoorDeliver.text =
+                      onValue.elementAt(0).deliveryAddress.split("_")[2];
+                }).catchError((onError) {
+                  print(onError);
+                });
+              } else {
+                deliveryAddress.text = "";
+                indoorDeliver.text = "";
+                outdoorDeliver.text = "";
+              }
+
               privateEvent = value;
             });
           },
         ),
         Text(
-          'Utilizar datos de\nFacturaciòn y entrega',
+          'Utilizar datos de\nFacturación y entrega',
           style: TextStyle(fontSize: _fontSize, color: _fontColor),
         )
       ],
     );
   }
 
-  Widget textFormFieldAddCard(BuildContext context) {
+  Widget deliveryAddressTextFormWidget(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(bottom: 5, top: 5),
-        width: MediaQuery.of(context).size.width,
-        child: Column(children: <Widget>[
+      margin: EdgeInsets.only(top: 10.0),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Agregar tarjeta*',
+              'Dirección de Entrega',
               style: TextStyle(
                   color: Colors.blue,
                   fontSize: _fontSize,
-                  fontFamily: 'Gotham_book'),
+                  fontFamily: 'Roboto'),
             ),
           ),
-          TextField(
-            focusNode: f1,
-            onChanged: (String newVal) {
-              if (newVal.length == 19) {
-                f1.unfocus();
-                FocusScope.of(context).requestFocus(f2);
-              }
-            },
-            controller: cardNumber,
-            keyboardType: TextInputType.number,
-            style: TextStyle(color: Colors.white, fontSize: _fontSize),
-            decoration: InputDecoration(
-                counterText: "",
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                ),
-                fillColor: Colors.blue,
-                filled: true,
-                contentPadding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.transparent, width: 0)),
-                alignLabelWithHint: false,
-                hintText: 'xxxx-xxxx-xxxx-4242',
-                hintStyle: TextStyle(
-                    color: Colors.grey[700],
-                    fontFamily: 'Gotham_book',
-                    fontSize: _fontSize)),
-            inputFormatters: [
-              MaskedTextInputFormatter(
-                mask: 'xxxx-xxxx-xxxx-xxxx',
-                separator: '-',
-              ),
-            ],
-          ),
-        ]));
-  }
-
-  Widget textFieldMonth(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width / 4,
-      child: Column(children: <Widget>[
-        Text(
-          'Mes',
-          style: TextStyle(
-              color: Colors.blue,
-              fontSize: _fontSize,
-              fontFamily: 'Gotham_book'),
-        ),
-        TextField(
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(1),
-            ],
-            focusNode: f2,
-            maxLength: 1,
-            onChanged: (String newVal) {
-              if (newVal.length == 1) {
-                f2.unfocus();
-                FocusScope.of(context).requestFocus(f3);
-              }
-            },
-            keyboardType: TextInputType.number,
-            controller: month,
-            style: TextStyle(color: Colors.white, fontSize: _fontSize),
-            decoration: InputDecoration(
-                counterText: "",
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                ),
-                fillColor: Colors.blue,
-                filled: true,
-                contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.transparent, width: 0)),
-                alignLabelWithHint: false,
-                hintText: '6',
-                hintStyle: TextStyle(
-                    color: Colors.grey[700],
-                    fontFamily: 'Gotham_book',
-                    fontSize: _fontSize))),
-      ]),
+          TextFormField(
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: _fontSize,
+                  fontFamily: 'Roboto'),
+              controller: deliveryAddress,
+              validator: (deliveryAddress) {
+                if (deliveryAddress == "") {
+                  return 'Falta llenar campo';
+                }
+              },
+              decoration: InputDecoration(
+                  errorStyle:
+                      TextStyle(fontSize: _fontSize, fontFamily: 'Roboto'),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: paddingTextField,
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.cyan)),
+                  alignLabelWithHint: true,
+                  hintText: 'Escribe calle',
+                  hintStyle:
+                      TextStyle(color: Colors.grey, fontFamily: 'Roboto'))),
+        ],
+      ),
     );
   }
 
-  Widget textFieldYear(BuildContext context) {
+  Widget indoorDeliverTextFormWidget(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width / 4,
-        child: Column(children: <Widget>[
-          Text(
-            'Año',
-            style: TextStyle(
-                color: Colors.blue,
-                fontSize: _fontSize,
-                fontFamily: 'Gotham_book'),
+      width: MediaQuery.of(context).size.width / 3,
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Numero interior',
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: _fontSize,
+                  fontFamily: 'Roboto'),
+            ),
           ),
-          TextField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(1),
-              ],
-              focusNode: f3,
-              onChanged: (String newVal) {
-                if (newVal.length == 2) {
-                  f3.unfocus();
-                  FocusScope.of(context).requestFocus(f4);
+          TextFormField(
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: _fontSize,
+                  fontFamily: 'Roboto'),
+              controller: indoorDeliver,
+              validator: (indoorDeliver) {
+                if (indoorDeliver == "") {
+                  return 'Falta llenar campo';
                 }
               },
-              maxLength: 2,
-              keyboardType: TextInputType.number,
-              controller: year,
-              style: TextStyle(color: Colors.white, fontSize: _fontSize),
               decoration: InputDecoration(
-                  counterText: "",
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Colors.grey, width: 0.0),
+                  errorStyle: TextStyle(fontSize: 10, fontFamily: 'Roboto'),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 1.0),
                   ),
-                  fillColor: Colors.blue,
+                  fillColor: Colors.white,
                   filled: true,
-                  contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  contentPadding: paddingTextField,
                   border: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.transparent, width: 0)),
-                  alignLabelWithHint: false,
-                  hintText: '22',
-                  hintStyle: TextStyle(
-                      color: Colors.grey[700],
-                      fontFamily: 'Gotham_book',
-                      fontSize: _fontSize)))
-        ]));
+                      borderSide: BorderSide(color: Colors.cyan)),
+                  alignLabelWithHint: true,
+                  hintText: 'Escribe numero',
+                  hintStyle:
+                      TextStyle(color: Colors.grey, fontFamily: 'Roboto'))),
+        ],
+      ),
+    );
   }
 
-  Widget textFieldCVV(BuildContext context) {
+  Widget outdoorDeliverTextFormWidget(BuildContext context) {
     return Container(
-      alignment: Alignment.topLeft,
-      width: MediaQuery.of(context).size.width / 4,
-      child: Column(children: <Widget>[
-        Text(
-          'CVV',
-          style: TextStyle(
-              color: Colors.blue,
-              fontSize: _fontSize,
-              fontFamily: 'Gotham_book'),
-        ),
-        TextFormField(
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(1),
-            ],
-            maxLength: 4,
-            focusNode: f4,
-            keyboardType: TextInputType.number,
-            controller: cvv,
-            style: TextStyle(color: Colors.white, fontSize: _fontSize),
-            decoration: InputDecoration(
-               counterText: "",
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                ),
-                fillColor: Colors.blue,
-                filled: true,
-                contentPadding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.transparent, width: 0)),
-                alignLabelWithHint: false,
-                hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontFamily: 'Gotham_book',
-                    fontSize: _fontSize))),
-      ]),
+      width: MediaQuery.of(context).size.width / 3,
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Numero exterior',
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: _fontSize,
+                  fontFamily: 'Roboto'),
+            ),
+          ),
+          TextFormField(
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: _fontSize,
+                  fontFamily: 'Roboto'),
+              controller: outdoorDeliver,
+              validator: (outdoorDeliver) {
+                if (outdoorDeliver == "") {
+                  return 'Falta llenar campo';
+                }
+              },
+              decoration: InputDecoration(
+                  errorStyle:
+                      TextStyle(fontSize: _fontSize, fontFamily: 'Roboto'),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: paddingTextField,
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.cyan)),
+                  alignLabelWithHint: true,
+                  hintText: 'Escribe numero',
+                  hintStyle:
+                      TextStyle(color: Colors.grey, fontFamily: 'Roboto'))),
+        ],
+      ),
     );
   }
 
@@ -524,31 +514,26 @@ class _PaymentState extends State<Payment> {
       return false;
   }
 
-  Widget sizeScreen480x640(BuildContext context) {}
-
-  Widget sizeScreen720x1280(BuildContext context) {}
-
-  Widget sizeScreen1200x1920(BuildContext context) {
+  Widget sizeScreen480x640(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 1.3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           postalCodeTextFormWidget(context),
-          streetTextFormWidget(context),
-          subUrbTextFormWidget(context),
-          checkBoxBillingDelivery(context),
-          textFormFieldAddCard(context),
+          // streetTextFormWidget(context),
+          // subUrbTextFormWidget(context),
+          deliveryAddressTextFormWidget(context),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              textFieldMonth(context),
-              textFieldYear(context),
-              textFieldCVV(context),
+              indoorDeliverTextFormWidget(context),
+              outdoorDeliverTextFormWidget(context)
             ],
           ),
+          checkBoxBillingDelivery(context),
           Align(
             alignment: Alignment.bottomCenter,
             child: payButton(context),
@@ -557,39 +542,62 @@ class _PaymentState extends State<Payment> {
       ),
     );
   }
-}
 
-//class for textform credit card format
-class MaskedTextInputFormatter extends TextInputFormatter {
-  final String mask;
-  final String separator;
-
-  MaskedTextInputFormatter({
-    @required this.mask,
-    @required this.separator,
-  }) {
-    assert(mask != null);
-    assert(separator != null);
+  Widget sizeScreen720x1280(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 1.3,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          postalCodeTextFormWidget(context),
+          // streetTextFormWidget(context),
+          // subUrbTextFormWidget(context),
+          deliveryAddressTextFormWidget(context),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              indoorDeliverTextFormWidget(context),
+              outdoorDeliverTextFormWidget(context)
+            ],
+          ),
+          checkBoxBillingDelivery(context),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: payButton(context),
+          )
+        ],
+      ),
+    );
   }
 
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.length > 0) {
-      if (newValue.text.length > oldValue.text.length) {
-        if (newValue.text.length > mask.length) return oldValue;
-        if (newValue.text.length < mask.length &&
-            mask[newValue.text.length - 1] == separator) {
-          return TextEditingValue(
-            text:
-                '${oldValue.text}$separator${newValue.text.substring(newValue.text.length - 1)}',
-            selection: TextSelection.collapsed(
-              offset: newValue.selection.end + 1,
-            ),
-          );
-        }
-      }
-    }
-    return newValue;
+  Widget sizeScreen1200x1920(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 1.3,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          postalCodeTextFormWidget(context),
+          // streetTextFormWidget(context),
+          // subUrbTextFormWidget(context),
+          deliveryAddressTextFormWidget(context),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              indoorDeliverTextFormWidget(context),
+              outdoorDeliverTextFormWidget(context)
+            ],
+          ),
+          checkBoxBillingDelivery(context),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: payButton(context),
+          )
+        ],
+      ),
+    );
   }
 }

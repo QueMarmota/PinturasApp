@@ -33,6 +33,9 @@ class _ShoppingCartState extends State<ShoppingCart> {
       for (var item in onValue) {
         listShoppingCar.add(item);
       }
+      if (listShoppingCar.length == 0) {
+        _isButtonTapped = true;
+      }
       setState(() {});
     }).catchError((onError) {});
   }
@@ -56,7 +59,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
         appBar: AppBar(
           centerTitle: true,
           title: Text('Carrito de compras'),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.red,
         ),
         body: Theme(
           data: ThemeData(accentColor: Colors.blue, fontFamily: 'Roboto'),
@@ -90,12 +93,14 @@ class _ShoppingCartState extends State<ShoppingCart> {
   Widget cardShoppingCart(BuildContext context, int idCart, String image,
       String name, String description, String price) {
     return Container(
-      height: MediaQuery.of(context).size.height / 9,
+      height: MediaQuery.of(context).size.height / 5,
       width: MediaQuery.of(context).size.width,
       child: Card(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Colors.white54,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(color: Colors.black),
+        ),
+        color: Colors.blue[50],
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +108,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
             Container(
               padding: EdgeInsets.all(5),
               child: Image.asset(
-                'assets/images/bg1.png',
+                'assets/images/Vinyl/vinipesa.png',
               ),
             ),
             Column(
@@ -116,26 +121,21 @@ class _ShoppingCartState extends State<ShoppingCart> {
             Align(
                 alignment: Alignment.center,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text('Precio'),
                     IconButton(
                       color: Colors.red,
+                      iconSize: 40,
                       icon: Icon(Icons.remove_shopping_cart),
                       tooltip: 'Quitar producto',
-                      onPressed: () {
-                        DBProvider db = new DBProvider();
-                        db.deleteCartById(0, idCart);
-                        //Remove from current
-                        int indexToDelete = 0;
-                        listShoppingCar.forEach((item) {
-                          if (item.idCart == idCart) return 0;
-                          indexToDelete++;
-                        });
-                        listShoppingCar.removeAt(indexToDelete);
-                        setState(() {
-                          carListWidget();
-                        });
-                      },
+                      onPressed: _isButtonTapped
+                          ? null
+                          : () {
+                              setState(() => _isButtonTapped =
+                                  !_isButtonTapped); //tapping the button once, disables the button from being tapped again
+                              _onRemoveProduct(idCart);
+                            },
                     ),
                   ],
                 ))
@@ -151,6 +151,38 @@ class _ShoppingCartState extends State<ShoppingCart> {
     setState(() => _isButtonTapped =
         !_isButtonTapped); //tapping the button once, disables the button from being tapped again
     confirmService();
+  }
+
+  //function called when sign in button its hited
+  _onRemoveProduct(int idCart) {
+    setState(() => _isButtonTapped =
+        !_isButtonTapped); //tapping the button once, disables the button from being tapped again
+    removeProduct(idCart);
+  }
+
+  changestate() {
+    setState(() {
+      carListWidget();
+    });
+    setState(() => _isButtonTapped = !_isButtonTapped);
+  }
+
+  removeProduct(int idCart) async {
+    DBProvider db = new DBProvider();
+    db.deleteCartById(0, idCart);
+//Remove from current list
+    int indexToDelete = 0;
+    for (final item in listShoppingCar) {
+      if (item.idCart == idCart) {
+        break;
+      }
+      indexToDelete++;
+    }
+    listShoppingCar.removeAt(indexToDelete);
+    changestate();
+    // await Future.delayed(Duration(milliseconds: 2500));
+    if (listShoppingCar.length != 0)
+      setState(() => _isButtonTapped = !_isButtonTapped);
   }
 
   confirmService() async {
@@ -201,16 +233,16 @@ class _ShoppingCartState extends State<ShoppingCart> {
             minWidth: MediaQuery.of(context).size.width / 2,
             child: RaisedButton(
               onPressed: _isButtonTapped ? null : _onTapped,
-              color: Colors.black,
+              color: Colors.blue,
               shape: new RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black),
+                  side: BorderSide(color: Colors.blue),
                   borderRadius: new BorderRadius.circular(10.0)),
               child: new Text(
-                'Realizar Pago',
+                'Confirmar',
                 style: new TextStyle(
                   fontFamily: "Roboto",
                   fontSize: 18,
-                  color: Colors.red,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -230,9 +262,111 @@ class _ShoppingCartState extends State<ShoppingCart> {
     return listCart;
   }
 
-  Widget sizeScreen480x640(BuildContext context) {}
+  Widget sizeScreen480x640(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        //List
+        Container(
+            padding: EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height / 1.5,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                children: carListWidget())),
+        //Feedback and button
+        //divider
+        new SizedBox(
+          height: 10.0,
+          child: new Center(
+            child: new Container(
+              margin: new EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
+              height: 2.0,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).size.height / 1.2,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Total a pagar',
+                style: TextStyle(fontSize: 20),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.attach_money),
+                  Text(
+                    '50.00',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              buttonConfirmPay(context),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
-  Widget sizeScreen720x1280(BuildContext context) {}
+  Widget sizeScreen720x1280(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        //List
+        Container(
+            padding: EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height / 1.5,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                children: carListWidget())),
+        //Feedback and button
+        //divider
+        new SizedBox(
+          height: 10.0,
+          child: new Center(
+            child: new Container(
+              margin: new EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
+              height: 2.0,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).size.height / 1.2,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Total a pagar',
+                style: TextStyle(fontSize: 20),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.attach_money),
+                  Text(
+                    '50.00',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              buttonConfirmPay(context),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget sizeScreen1200x1920(BuildContext context) {
     return Column(
@@ -247,16 +381,38 @@ class _ShoppingCartState extends State<ShoppingCart> {
                 scrollDirection: Axis.vertical,
                 children: carListWidget())),
         //Feedback and button
+        //divider
+        new SizedBox(
+          height: 10.0,
+          child: new Center(
+            child: new Container(
+              margin: new EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
+              height: 2.0,
+              color: Colors.black,
+            ),
+          ),
+        ),
         Container(
-          color: Colors.black54,
           height: MediaQuery.of(context).size.height -
-              MediaQuery.of(context).size.height / 1.275,
+              MediaQuery.of(context).size.height / 1.2,
           width: MediaQuery.of(context).size.width,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('Total a pagar'),
-              Text('50.00'),
+              Text(
+                'Total a pagar',
+                style: TextStyle(fontSize: 20),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.attach_money),
+                  Text(
+                    '50.00',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
               buttonConfirmPay(context),
             ],
           ),

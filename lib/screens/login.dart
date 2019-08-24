@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
   Widget sizeScreen480x640(BuildContext context) {
     return Stack(
       children: <Widget>[
-        backgroundImage(context),
+        // backgroundImage(context),
         SafeArea(
           minimum: const EdgeInsets.fromLTRB(20, 30, 20, 20),
           child: ListView(
@@ -49,7 +49,7 @@ class _LoginState extends State<Login> {
                 child: Container(
                   height: MediaQuery.of(context).size.height / 2.6,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       formTextBoxEmail(context),
                       formTextBoxPassword(context),
@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
   Widget sizeScreen720x1280(BuildContext context) {
     return Stack(
       children: <Widget>[
-        backgroundImage(context),
+        // backgroundImage(context),
         SafeArea(
           minimum: const EdgeInsets.fromLTRB(20, 30, 20, 20),
           child: ListView(
@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
                 child: Container(
                   height: MediaQuery.of(context).size.height / 2.6,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       formTextBoxEmail(context),
                       formTextBoxPassword(context),
@@ -120,7 +120,7 @@ class _LoginState extends State<Login> {
   Widget sizeScreen1200x1920(BuildContext context) {
     return Stack(
       children: <Widget>[
-        backgroundImage(context),
+        // backgroundImage(context),
         SafeArea(
           minimum: const EdgeInsets.fromLTRB(20, 30, 20, 20),
           child: ListView(
@@ -139,7 +139,7 @@ class _LoginState extends State<Login> {
                 child: Container(
                   height: MediaQuery.of(context).size.height / 3.4,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       formTextBoxEmail(context),
                       formTextBoxPassword(context),
@@ -152,7 +152,7 @@ class _LoginState extends State<Login> {
               Container(
                 height: MediaQuery.of(context).size.height / 4,
                 margin: EdgeInsets.only(top: 10),
-                alignment: Alignment.center,
+                alignment: Alignment.bottomCenter,
                 child: buttons(context),
               )
             ],
@@ -174,7 +174,7 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Iniciar sesión'),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.red,
       ),
       body: Theme(
         data: ThemeData(accentColor: Colors.blue, fontFamily: 'Roboto'),
@@ -256,9 +256,9 @@ class _LoginState extends State<Login> {
                   errorStyle:
                       TextStyle(fontSize: _fontSize - 5, fontFamily: 'Roboto'),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 0.0),
+                    borderSide: BorderSide(color: Colors.blue, width: 1.0),
                   ),
-                  fillColor: Colors.blue,
+                  fillColor: Colors.white,
                   filled: true,
                   contentPadding: paddingTextField,
                   border: OutlineInputBorder(
@@ -305,9 +305,9 @@ class _LoginState extends State<Login> {
                   errorStyle:
                       TextStyle(fontSize: _fontSize - 5, fontFamily: 'Roboto'),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 0.0),
+                    borderSide: BorderSide(color: Colors.blue, width: 1.0),
                   ),
-                  fillColor: Colors.blue,
+                  fillColor: Colors.white,
                   filled: true,
                   contentPadding: paddingTextField,
                   border: OutlineInputBorder(
@@ -429,7 +429,7 @@ class _LoginState extends State<Login> {
               child: RaisedButton(
                 //ON PRESSED FUNCTION , THIS IS IMPLEMENTATION IS TO AVOID MULTI TAPPING ON THE BUTTON
                 onPressed: _isButtonTapped ? null : _onTappedLoggin,
-                color: Colors.green,
+                color: Colors.blue,
                 shape: new RoundedRectangleBorder(
                     side: BorderSide(color: Colors.black),
                     borderRadius: new BorderRadius.circular(10.0)),
@@ -438,7 +438,7 @@ class _LoginState extends State<Login> {
                   style: new TextStyle(
                     fontFamily: "Roboto",
                     fontSize: _fontSize,
-                    color: Colors.blue,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -455,7 +455,7 @@ class _LoginState extends State<Login> {
                     builder: (context) => SingIn(),
                   ));
             },
-            color: Colors.green,
+            color: Colors.blue,
             shape: new RoundedRectangleBorder(
                 side: BorderSide(color: Colors.black),
                 borderRadius: new BorderRadius.circular(10.0)),
@@ -464,7 +464,7 @@ class _LoginState extends State<Login> {
               style: new TextStyle(
                 fontFamily: "Roboto",
                 fontSize: _fontSize,
-                color: Colors.blue,
+                color: Colors.white,
               ),
             ),
           ),

@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
               description: "Descripcion",
               idUser: 0)) !=
           0) listShoppingCar.add(10);
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: 1000));
 
       setState(() {
         _isButtonTapped = !_isButtonTapped;
@@ -195,9 +195,11 @@ class _HomeState extends State<Home> {
                   children: <Widget>[
                     Expanded(
                       child: RaisedButton(
+                         shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0),
+                           side: BorderSide(color: Colors.black),),
                         onPressed:
                             _isButtonTapped ? null : _onTappedAddProductCart,
-                        color: Colors.white60,
+                        color: Colors.white,
                         child: Icon(
                           Icons.add_shopping_cart,
                           color: Colors.green[900],
@@ -286,7 +288,7 @@ class _HomeState extends State<Home> {
                 width: widthCard,
                 child: createCardProductPaint(
                     context,
-                    'assets/images/Enamels/brigadier.png',
+                    'assets/images/Adhesivos/acribond.png',
                     'Brigadier',
                     '50.00',
                     "Description",
@@ -297,7 +299,7 @@ class _HomeState extends State<Home> {
                 width: widthCard,
                 child: createCardProductPaint(
                     context,
-                    'assets/images/Enamels/clasico.png',
+                    'assets/images/Adhesivos/pegaso-bond.png',
                     'Clasico',
                     '50.00',
                     "Description",
@@ -308,7 +310,7 @@ class _HomeState extends State<Home> {
                 width: widthCard,
                 child: createCardProductPaint(
                     context,
-                    'assets/images/Enamels/tropimar-sur-1.png',
+                    'assets/images/Adhesivos/pegaso-tirol.png',
                     'Tropimar',
                     '50.00',
                     "Description",
@@ -319,7 +321,7 @@ class _HomeState extends State<Home> {
                 width: widthCard,
                 child: createCardProductPaint(
                     context,
-                    'assets/images/Enamels/tropimar.png',
+                    'assets/images/Adhesivos/pegaso-yeso.png',
                     'Tropimar SUR',
                     '50.00',
                     "Description",
@@ -558,6 +560,7 @@ class _HomeState extends State<Home> {
         builder: (context) => Scaffold(
               key: _scaffoldKey,
               appBar: new AppBar(
+                backgroundColor: Colors.red,
                 actions: <Widget>[
                   new Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -585,7 +588,7 @@ class _HomeState extends State<Home> {
                                       child: new Stack(
                                       children: <Widget>[
                                         new Icon(Icons.brightness_1,
-                                            size: 20.0, color: Colors.red[800]),
+                                            size: 20.0, color: Colors.green[800]),
                                         new Positioned(
                                             top: 3.0,
                                             right: 6.0,
@@ -702,10 +705,10 @@ class _HomeState extends State<Home> {
                           colors: [
                             // Colors are easy thanks to Flutter's Colors class.
                             //simulate gradient
-                            Colors.blue[800],
-                            Colors.blue[700],
-                            Colors.blue[600],
-                            Colors.blue[400],
+                            Colors.red[800],
+                            Colors.red[700],
+                            Colors.red[600],
+                            Colors.red[400],
                           ],
                         ),
                       ),

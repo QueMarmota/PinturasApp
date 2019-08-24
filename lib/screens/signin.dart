@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pinturasapp/screens/login.dart';
 
 var name = TextEditingController();
 var phone = TextEditingController();
@@ -34,25 +35,25 @@ class _SingInState extends State<SingIn> {
   Widget sizeScreen480x640(BuildContext context) {
     return Stack(
       children: <Widget>[
-        backgroundImage(context),
+        // backgroundImage(context),
         SafeArea(
           minimum: const EdgeInsets.fromLTRB(20, 30, 20, 5),
           child: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 5,
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'images/bucket_logo.png',
-                ),
-              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   height: MediaQuery.of(context).size.height / 5,
+              //   alignment: Alignment.topCenter,
+              //   child: Image.asset(
+              //     'images/bucket_logo.png',
+              //   ),
+              // ),
               Form(
                 key: _formKey,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 1.3,
+                  height: MediaQuery.of(context).size.height / 1.2,
                   alignment: Alignment.center,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,25 +80,25 @@ class _SingInState extends State<SingIn> {
   Widget sizeScreen720x1280(BuildContext context) {
     return Stack(
       children: <Widget>[
-        backgroundImage(context),
+        // backgroundImage(context),
         SafeArea(
           minimum: const EdgeInsets.fromLTRB(20, 20, 20, 0),
           child: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 4.5,
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'images/bucket_logo.png',
-                ),
-              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   height: MediaQuery.of(context).size.height / 4.5,
+              //   alignment: Alignment.topCenter,
+              //   child: Image.asset(
+              //     'images/bucket_logo.png',
+              //   ),
+              // ),
               Form(
                 key: _formKey,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 1.33,
+                  height: MediaQuery.of(context).size.height / 1.2,
                   alignment: Alignment.center,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,25 +128,25 @@ class _SingInState extends State<SingIn> {
   Widget sizeScreen1200x1920(BuildContext context) {
     return Stack(
       children: <Widget>[
-        backgroundImage(context),
+        // backgroundImage(context),
         SafeArea(
           minimum: const EdgeInsets.fromLTRB(20, 30, 20, 1),
           child: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 4.5,
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'images/bucket_logo.png',
-                ),
-              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   height: MediaQuery.of(context).size.height / 4.5,
+              //   alignment: Alignment.topCenter,
+              //   child: Image.asset(
+              //     'images/bucket_logo.png',
+              //   ),
+              // ),
               Form(
                 key: _formKey,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 1.615,
+                  height: MediaQuery.of(context).size.height / 1.2,
                   alignment: Alignment.center,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,6 +180,21 @@ class _SingInState extends State<SingIn> {
   }
 
   signInHttpPetition() async {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        'Registrando',
+        style: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
+      ),
+      duration: Duration(seconds: 1),
+    ));
+    await Future.delayed(Duration(milliseconds: 1000));
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Login(),
+        ));
+
     // Dialogs dialog = new Dialogs();
     // var url = globals.apiUrl + 'client/register';
     // var response = await http.post(url, body: {
@@ -219,7 +235,7 @@ class _SingInState extends State<SingIn> {
             minWidth: MediaQuery.of(context).size.width / 2,
             child: RaisedButton(
               onPressed: _isButtonTapped ? null : _onTapped,
-              color: Colors.black,
+              color: Colors.blue,
               shape: new RoundedRectangleBorder(
                   side: BorderSide(color: Colors.black),
                   borderRadius: new BorderRadius.circular(10.0)),
@@ -228,7 +244,7 @@ class _SingInState extends State<SingIn> {
                 style: new TextStyle(
                   fontFamily: "Gotham_Book",
                   fontSize: _fontSize,
-                  color: Colors.red,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -271,7 +287,7 @@ class _SingInState extends State<SingIn> {
             child: Text(
               'Nombre*',
               style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.blue,
                   fontSize: _fontSize,
                   fontFamily: 'Gotham_book'),
             ),
@@ -289,9 +305,9 @@ class _SingInState extends State<SingIn> {
                 decoration: InputDecoration(
                     errorStyle: TextStyle(fontSize: _fontSize - 2),
                     enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.blue),
                     ),
-                    fillColor: Colors.blue,
+                    fillColor: Colors.white,
                     filled: true,
                     contentPadding: _paddingTextField,
                     border: OutlineInputBorder(
@@ -318,7 +334,7 @@ class _SingInState extends State<SingIn> {
             child: Text(
               'Teléfono',
               style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.blue,
                   fontSize: _fontSize,
                   fontFamily: 'Gotham_book'),
             ),
@@ -333,9 +349,9 @@ class _SingInState extends State<SingIn> {
                 decoration: InputDecoration(
                     errorStyle: TextStyle(fontSize: _fontSize - 2),
                     enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.blue),
                     ),
-                    fillColor: Colors.blue,
+                    fillColor: Colors.white,
                     filled: true,
                     contentPadding: _paddingTextField,
                     border: OutlineInputBorder(
@@ -362,7 +378,7 @@ class _SingInState extends State<SingIn> {
             child: Text(
               'Correo*',
               style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.blue,
                   fontSize: _fontSize,
                   fontFamily: 'Gotham_book'),
             ),
@@ -384,9 +400,9 @@ class _SingInState extends State<SingIn> {
                 decoration: InputDecoration(
                     errorStyle: TextStyle(fontSize: _fontSize - 2),
                     enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.blue),
                     ),
-                    fillColor: Colors.blue,
+                    fillColor: Colors.white,
                     filled: true,
                     contentPadding: _paddingTextField,
                     border: OutlineInputBorder(
@@ -413,7 +429,7 @@ class _SingInState extends State<SingIn> {
             child: Text(
               'Contraseña*',
               style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.blue,
                   fontSize: _fontSize,
                   fontFamily: 'Gotham_book'),
             ),
@@ -444,9 +460,9 @@ class _SingInState extends State<SingIn> {
                 decoration: InputDecoration(
                     errorStyle: TextStyle(fontSize: _fontSize - 2),
                     enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.blue),
                     ),
-                    fillColor: Colors.blue,
+                    fillColor: Colors.white,
                     filled: true,
                     contentPadding: _paddingTextField,
                     border: OutlineInputBorder(
@@ -473,7 +489,7 @@ class _SingInState extends State<SingIn> {
             child: Text(
               'Confirmar contraseña*',
               style: TextStyle(
-                color: Colors.red,
+                color: Colors.blue,
                 fontSize: _fontSize,
                 fontFamily: 'Gotham_book',
               ),
@@ -505,9 +521,9 @@ class _SingInState extends State<SingIn> {
                 decoration: InputDecoration(
                     errorStyle: TextStyle(fontSize: _fontSize - 2),
                     enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.blue),
                     ),
-                    fillColor: Colors.blue,
+                    fillColor: Colors.white,
                     filled: true,
                     contentPadding: _paddingTextField,
                     border: OutlineInputBorder(
@@ -574,7 +590,7 @@ class _SingInState extends State<SingIn> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Registro'),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.red,
       ),
       body: Theme(
         data: ThemeData(accentColor: Colors.blue, fontFamily: 'Roboto'),
