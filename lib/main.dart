@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pinturasapp/database.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:pinturasapp/globals.dart' as globals;
+import 'package:pinturasapp/screens/shoppingCart.dart';
 
 void main() => runApp(MyApp());
 
@@ -51,7 +52,7 @@ class _MainPageState extends State<MainPage> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Home(),
+          builder: (context) => ShoppingCart(),
         ));
   }
 

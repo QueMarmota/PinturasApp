@@ -1,6 +1,6 @@
 library my_prj.globals;
 
-String apiUrl =  'http://157.230.128.97/bucketapp/public/api/';
+String apiUrl =  'https://apipinturas.herokuapp.com/';
 //singleton
 String apiToken;
 

@@ -1,10 +1,13 @@
+import 'dart:convert';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinturasapp/screens/signin.dart';
 import 'package:pinturasapp/screens/home.dart';
 import 'package:pinturasapp/database.dart';
-import 'package:pinturasapp/globals.dart' as globals;
 import 'package:pinturasapp/models/User.dart';
+import 'package:pinturasapp/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 String apiToken;
 
@@ -332,75 +335,60 @@ class _LoginState extends State<Login> {
         ),
         duration: Duration(seconds: 1),
       ));
-      //Codigo provisional antes de esto hay que checar en el servidor si el usuario existe
-      DBProvider db = new DBProvider();
-      db.writeContent("_apiToken", "email");
-      globals.setApiToken("_apiToken");
-      //   //chech if user exist in local DB
-      Future<User> checkUser = DBProvider.db.getUserByEmail(email.text);
-      //if user dosent exists
-      checkUser.then((result) async {
-        //if user dosent  exist then create
-        if (result.email == null && result.idUser == null) {
-          // create in table Users the new user
-          User newUser = User(email: email.text, name: 'Nombre');
-          await DBProvider.db.newUser(newUser);
-        }
-        //Send to index screen
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Home(),
-            ));
-      }).catchError((onError) {});
 
-      // var url = globals.apiUrl + 'login';
-      // var response = await http.post(url,
-      //     body: {'email': '${email.text}', 'password': '${password.text}'});
+      var url = globals.apiUrl + 'users/login';
+      var response = await http.post(url,
+          body: {'email': '${email.text}', 'password': '${password.text}'});
       // //Decode json
-      // Map<String, dynamic> data = jsonDecode(' ${response.body}');
-      // if ('${data['status']}' != 'error') {
-      //   //if not errors from server
-      //   apiToken = '${data['data']['api_token']}';
-      //   //save in local storage the email and api_token
-      //   writeContent();
-      //   //chech if user exist in local DB
-      //   Future<User> checkUser = DBProvider.db.getUserByEmail(email.text);
-      //   //if user dosent exists
-      //   checkUser.then((result) async {
-      //     //if user dosent  exist then create
-      //     if (result.email == null && result.idUser == null) {
-      //       // create in table Users the new user
-      //       User newUser =
-      //           User(email: email.text, name: '${data['data']['name']}');
-      //       await DBProvider.db.newUser(newUser);
-      //     }
-      //     //Send to index screen
-      //     Navigator.pushReplacement(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => Index(),
-      //         ));
-      //   }).catchError((onError) {});
-      // } else if ('${data['message']}' ==
-      //     "Favor de checar su email y validar su cuenta.") {
-      //   //we send email and password cuz we can resend email or not
-      //   dialog.emailConfirmation(
-      //       context,
-      //       'Cuenta Inactiva',
-      //       'Activa tu cuenta desde el\nenlace que te enviamos\npor correo',
-      //       email.text,
-      //       password.text);
-      // } else {
-      //   //if errorfrom server
-      //   dialog.error(
-      //       context, 'Datos invalidos', 'Verifica tu usuario\no contraseña');
-      //   await Future.delayed(Duration(milliseconds: 2500));
-      //   Navigator.of(context, rootNavigator: true).pop('dialog');
-      // }
+      Map<String, dynamic> data = jsonDecode(' ${response.body}');
+      if ('${data['status']}' != 'error') {
+        //if not errors from server
+        apiToken = '${data['data']['token']}';
+          //DECODE JWT
+          //  final parts = apiToken.split('.');
+          // final payload = parts[1];
+          // final String decoded = B64urlEncRfc7515.decodeUtf8(payload);
+          // print(decoded);
+        //save in local storage the email and api_token
+        DBProvider db = new DBProvider();
+        db.writeContent(apiToken, "'${data['data']['email']}'");
+        globals.setApiToken(apiToken);
+        //   //chech if user exist in local DB
+        Future<User> checkUser = DBProvider.db.getUserByEmail(email.text);
+        //if user dosent exists
+        checkUser.then((result) async {
+          //if user dosent  exists in localDB then create
+          if (result.email == null && result.idUser == null) {
+            // create in table Users the new user
+            User newUser =
+                User(email: email.text, name: '${data['data']['name']}');
+            await DBProvider.db.newUser(newUser);
+          }
+          //Send to index screen
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Home(),
+              ));
+        }).catchError((onError) {});
+      } else {
+        //if errorfrom server or wrong password or anything wrong
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+            '${data['message']}',
+            style: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
+          ),
+          duration: Duration(seconds: 1),
+        ));
+        // dialog.error(
+        //     context, 'Datos invalidos', 'Verifica tu usuario\no contraseña');
+        // await Future.delayed(Duration(milliseconds: 2500));
+        // Navigator.of(context, rootNavigator: true).pop('dialog');
+      }
     } else {
       //FORMULARIO NO VALIDO
     }
+    //enable button after procedure
     setState(() => _isButtonTapped =
         !_isButtonTapped); //tapping the button once, disables the button from being tapped again
   }

@@ -9,19 +9,19 @@ import 'home.dart';
 String _image;
 String _name;
 String _description;
-String _price;
-String _category;
+double _price;
+int _idCategory;
 //variable for product add cart
 bool _isButtonTapped = false;
 
 class Product extends StatefulWidget {
-  Product(Key key, String image, String name, String description, String price,
-      String category) {
+  Product(Key key, String image, String name, String description, double price,
+      int  category) {
     _image = image;
     _name = name;
     _description = description;
     _price = price;
-    _category = category;
+    _idCategory = category;
   }
 
   _ProductState createState() => _ProductState();
@@ -129,21 +129,7 @@ class _ProductState extends State<Product> {
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/vini.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(
-                  context,
-                  'assets/images/Vinyl/vinipesa.png',
-                  "Vintek",
-                  "50.00",
-                  "Description",
-                  "Category"),
+         
             ],
           ),
         )
@@ -219,21 +205,7 @@ class _ProductState extends State<Product> {
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/vini.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(
-                  context,
-                  'assets/images/Vinyl/vinipesa.png',
-                  "Vintek",
-                  "50.00",
-                  "Description",
-                  "Category"),
+           
             ],
           ),
         )
@@ -309,21 +281,7 @@ class _ProductState extends State<Product> {
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/vini.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(context, 'assets/images/Vinyl/realtek.png',
-                  "Vintek", "50.00", "Description", "Category"),
-              createCardProductPaint(
-                  context,
-                  'assets/images/Vinyl/vinipesa.png',
-                  "Vintek",
-                  "50.00",
-                  "Description",
-                  "Category"),
+             
             ],
           ),
         )
@@ -361,12 +319,10 @@ class _ProductState extends State<Product> {
       BuildContext context,
       String _image,
       String _nameProduct,
-      String _price,
+      double _price,
       String _description,
-      String _category) {
-    String image = _image;
-    String nameProduct = _nameProduct;
-    String price = _price;
+      int _idCategory) {
+   
 
     return Container(
       // color: Colors.transparent,
@@ -394,10 +350,10 @@ class _ProductState extends State<Product> {
                               _nameProduct,
                               _description,
                               _price,
-                              _category)));
+                              _idCategory)));
                     },
                     child: Image.asset(
-                      image,
+                      _image,
                     ),
                   ),
                   fit: BoxFit.fill,
@@ -406,7 +362,7 @@ class _ProductState extends State<Product> {
             //name Product
             Align(
                 alignment: Alignment.center,
-                child: Text(nameProduct,
+                child: Text(_nameProduct,
                     style: TextStyle(
                         fontSize: 16,
                         color: _fontColor,
@@ -416,7 +372,7 @@ class _ProductState extends State<Product> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[Icon(Icons.attach_money), Text(price)],
+              children: <Widget>[Icon(Icons.attach_money), Text(_price.toString())],
             ),
             //More information
             // Row(

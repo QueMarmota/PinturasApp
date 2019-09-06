@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'package:pinturasapp/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:pinturasapp/database.dart';
-import 'package:pinturasapp/models/cart.dart';
+import 'package:pinturasapp/models/product.dart';
 import 'package:pinturasapp/screens/home.dart';
 import 'payment.dart';
+import 'package:http/http.dart' as http;
 
 class ShoppingCart extends StatefulWidget {
   ShoppingCart({Key key}) : super(key: key);
@@ -13,7 +17,7 @@ class ShoppingCart extends StatefulWidget {
 
 class _ShoppingCartState extends State<ShoppingCart> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  List<Cart> listShoppingCar = new List<Cart>();
+  List<Product> listShoppingCar = new List<Product>();
 
   int _fontSize;
 
@@ -23,21 +27,52 @@ class _ShoppingCartState extends State<ShoppingCart> {
 
   @override
   void initState() {
-    getProductsInCart();
+    //DECODE JWT
+    //get the token from local db
+    final parts = globals.getApiToken().split('.');
+    final payload = parts[1];
+    final String decoded = B64urlEncRfc7515.decodeUtf8(payload);
+    Map<String, dynamic> data = jsonDecode(decoded);
+    currentIdUser = data["idUser"];
+    //Search if the user have products in the shopping cart
+    getProductsInCart(data["idUser"]);
     super.initState();
   }
 
-  void getProductsInCart() {
-    DBProvider db = new DBProvider();
-    db.getCarts(0).then((onValue) {
-      for (var item in onValue) {
-        listShoppingCar.add(item);
-      }
-      if (listShoppingCar.length == 0) {
-        _isButtonTapped = true;
+  void getProductsInCart(int idUser) async {
+    // DBProvider db = new DBProvider();
+    // db.getCarts(0).then((onValue) {
+    //   for (var item in onValue) {
+    //     listShoppingCar.add(item);
+    //   }
+    //   if (listShoppingCar.length == 0) {
+    //     _isButtonTapped = true;
+    //   }
+    //   setState(() {});
+    // }).catchError((onError) {});
+
+    var url = globals.apiUrl + 'shopping_cart/idUser/' + idUser.toString();
+    var response = await http.get(url);
+    //Decode json
+    Map<String, dynamic> data = jsonDecode(' ${response.body}');
+    //If everything went good
+    if (data.length > 0) {
+      for (var item in data["data"]) {
+        //add a number to the shopping cart
+         url = globals.apiUrl + 'products/' + item["idProduct"].toString();
+         response = await http.get(url);
+        //Decode json
+        Map<String, dynamic> dataProd = jsonDecode(' ${response.body}');
+        dataProd["price"] = dataProd["price"].toString();
+        dataProd["idCategory"] = dataProd["idCategory"].toString();
+
+        // dataProd["price"] = double.parse(dataProd["price"]);
+        print(dataProd);
+        Product tempcar = Product.fromMap(dataProd);
+        listShoppingCar.add(tempcar);
       }
       setState(() {});
-    }).catchError((onError) {});
+    }
   }
 
   @override
@@ -90,7 +125,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
     );
   }
 
-  Widget cardShoppingCart(BuildContext context, int idCart, String image,
+  Widget cardShoppingCart(BuildContext context, int idProduct, String image,
       String name, String description, String price) {
     return Container(
       height: MediaQuery.of(context).size.height / 5,
@@ -134,7 +169,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           : () {
                               setState(() => _isButtonTapped =
                                   !_isButtonTapped); //tapping the button once, disables the button from being tapped again
-                              _onRemoveProduct(idCart);
+                              _onRemoveProduct(idProduct);
                             },
                     ),
                   ],
@@ -154,10 +189,10 @@ class _ShoppingCartState extends State<ShoppingCart> {
   }
 
   //function called when sign in button its hited
-  _onRemoveProduct(int idCart) {
+  _onRemoveProduct(int idProduct) {
     setState(() => _isButtonTapped =
         !_isButtonTapped); //tapping the button once, disables the button from being tapped again
-    removeProduct(idCart);
+    removeProduct(idProduct);
   }
 
   changestate() {
@@ -167,13 +202,13 @@ class _ShoppingCartState extends State<ShoppingCart> {
     setState(() => _isButtonTapped = !_isButtonTapped);
   }
 
-  removeProduct(int idCart) async {
+  removeProduct(int idProduct) async {
     DBProvider db = new DBProvider();
-    db.deleteCartById(0, idCart);
+    db.deleteCartById(0, idProduct);
 //Remove from current list
     int indexToDelete = 0;
     for (final item in listShoppingCar) {
-      if (item.idCart == idCart) {
+      if (item.id == idProduct) {
         break;
       }
       indexToDelete++;
@@ -256,7 +291,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
     List<Widget> listCart = new List<Widget>();
 
     for (var item in listShoppingCar) {
-      listCart.add(cardShoppingCart(context, item.idCart, item.image, item.name,
+      listCart.add(cardShoppingCart(context, item.id, item.image, item.name,
           item.description, item.price));
     }
     return listCart;

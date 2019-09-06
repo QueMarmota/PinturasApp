@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinturasapp/screens/login.dart';
+import 'package:pinturasapp/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 var name = TextEditingController();
 var phone = TextEditingController();
@@ -180,49 +184,52 @@ class _SingInState extends State<SingIn> {
   }
 
   signInHttpPetition() async {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(
-        'Registrando',
-        style: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
-      ),
-      duration: Duration(seconds: 1),
-    ));
-    await Future.delayed(Duration(milliseconds: 1000));
+    // await Future.delayed(Duration(milliseconds: 1000));
 
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Login(),
-        ));
+    // Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => Login(),
+    //     ));
 
     // Dialogs dialog = new Dialogs();
-    // var url = globals.apiUrl + 'client/register';
-    // var response = await http.post(url, body: {
-    //   'email': '${email.text}',
-    //   'name': '${name.text}',
-    //   'phone': '${phone.text == "" ? '' : phone.text}',
-    //   'password': '${password.text}'
-    // });
+    var url = globals.apiUrl + 'users/signin';
+    var response = await http.post(url, body: {
+      'email': '${email.text}',
+      'name': '${name.text}',
+      'phone': '${phone.text == "" ? '' : phone.text}',
+      'password': '${password.text}'
+    });
+
     //Decode json
-    // Map<String, dynamic> data = jsonDecode(' ${response.body}');
-    // if ('${data['status']}' == "success") {
-    //   //if everything works fine in server side
-    //   dialog.success(context, 'Registro Correcto',
-    //       '¡Te enviamos un\ncorreo para\nactivar la cuenta!');
-    //   await Future.delayed(Duration(seconds: 3));
-    //   Navigator.of(context, rootNavigator: true).pop('dialog');
-    //   await Future.delayed(Duration(milliseconds: 500));
-    //   Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => Login(),
-    //       ));
-    // } else {
-    //   //if http petition goes wrong
-    //   dialog.error(context, 'Algo salio mal', 'Intentalo mas tarde');
-    //   await Future.delayed(Duration(seconds: 2));
-    //   Navigator.of(context, rootNavigator: true).pop('dialog');
-    // }
+    Map<String, dynamic> data = jsonDecode(' ${response.body}');
+    if ('${data['status']}' == "success") {
+      //if everything works fine in server side
+      // dialog.success(context, 'Registro Correcto',
+      //     '¡Te enviamos un\ncorreo para\nactivar la cuenta!');
+      // await Future.delayed(Duration(seconds: 3));
+      // Navigator.of(context, rootNavigator: true).pop('dialog');
+      // await Future.delayed(Duration(milliseconds: 500));
+
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text(
+          'Registrado',
+          style: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
+        ),
+        duration: Duration(seconds: 1),
+      ));
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Login(),
+          ));
+    } else {
+      //if http petition goes wrong
+      // dialog.error(context, 'Algo salio mal', 'Intentalo mas tarde');
+      // await Future.delayed(Duration(seconds: 2));
+      // Navigator.of(context, rootNavigator: true).pop('dialog');
+    }
   }
 
   Widget buttonSingIn(BuildContext context) {
